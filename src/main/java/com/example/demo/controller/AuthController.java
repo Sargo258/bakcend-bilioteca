@@ -12,6 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api")
@@ -25,6 +27,7 @@ public class AuthController {
 
     @Autowired
     private JwtUtil jwtUtil;
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody Users user) {
@@ -34,17 +37,23 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Users loginUser) {
+        logger.info("Intento de login para el usuario: {}", loginUser.getUsername());
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginUser.getUsername(), loginUser.getPassword())
             );
+            logger.info("Autenticación exitosa para el usuario: {}", loginUser.getUsername());
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String jwt = jwtUtil.generateToken(userDetails.getUsername());
 
             return ResponseEntity.ok(new AuthResponse(jwt));
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+            logger.error("Error de autenticación para el usuario: {}", loginUser.getUsername(), e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario o contraseña inválidos");
+        } catch (Exception e) {
+            logger.error("Error inesperado durante el login para el usuario: {}", loginUser.getUsername(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado durante el login");
         }
     }
 

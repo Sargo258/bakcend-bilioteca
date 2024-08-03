@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.UserDTO;
+import com.example.demo.dto.UserProfileDTO;
 import com.example.demo.models.Users;
 import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
@@ -50,5 +51,18 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+
+    @PutMapping("/profile/{id}")
+    public ResponseEntity<Users> updateUserProfile(@PathVariable Long id, @Valid @RequestBody UserProfileDTO userProfileDTO) {
+        Users updatedUser = userService.updateUserProfile(id, userProfileDTO);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @PutMapping("/admin/update-role/{id}")
+    public ResponseEntity<Users> updateUserRole(@PathVariable Long id, @RequestParam String role) {
+        Users updatedUser = userService.updateUserRole(id, role);
+        return ResponseEntity.ok(updatedUser);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.UserProfileDTO;
 import com.example.demo.models.Users;
 import com.example.demo.repository.UserRepository;
 import org.springframework.context.annotation.Lazy;
@@ -64,5 +65,26 @@ public class UserService implements UserDetailsService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public Users updateUserProfile(Long id, UserProfileDTO userProfileDTO) {
+        Users user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (userProfileDTO.getUsername() != null) {
+            user.setUsername(userProfileDTO.getUsername());
+        }
+
+        if (userProfileDTO.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(userProfileDTO.getPassword()));
+        }
+
+        // El rol no se actualiza aquí porque los usuarios no deben cambiar su propio rol
+        return userRepository.save(user);
+    }
+
+    public Users updateUserRole(Long id, String role) {
+        Users user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setRole(role);
+        return userRepository.save(user);
     }
 }

@@ -3,6 +3,7 @@ package com.example.demo.service;
 ;
 
 
+import com.example.demo.dto.ResourceSearchDTO;
 import com.example.demo.models.Resource;
 import com.example.demo.repository.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,11 @@ public class ResourceService {
 
     @Autowired
     private ResourceRepository resourceRepository;
+
+    public List<Resource> searchResources(ResourceSearchDTO searchDTO) {
+        // Implementación de búsqueda y filtrado
+        return resourceRepository.findByCriteria(searchDTO);
+    }
 
     public Resource createResource(Resource resource) {
         return resourceRepository.save(resource);

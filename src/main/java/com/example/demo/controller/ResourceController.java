@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.dto.ResourceSearchDTO;
 import com.example.demo.models.Resource;
 import com.example.demo.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,12 @@ public class ResourceController {
 
     @Autowired
     private ResourceService resourceService;
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Resource>> searchResources(ResourceSearchDTO searchDTO) {
+        List<Resource> resources = resourceService.searchResources(searchDTO);
+        return ResponseEntity.ok(resources);
+    }
 
     @PostMapping
     public ResponseEntity<Resource> createResource(@RequestBody Resource resource) {
