@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.UserDTO;
 import com.example.demo.models.Users;
 import com.example.demo.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +31,11 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Users> createUser(@RequestBody Users user) {
+    public ResponseEntity<Users> createUser(@Valid @RequestBody UserDTO userDto) {
+        Users user = new Users();
+        user.setUsername(userDto.getUsername());
+        user.setPassword(userDto.getPassword());
+        user.setRole(userDto.getRole());
         Users createdUser = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
