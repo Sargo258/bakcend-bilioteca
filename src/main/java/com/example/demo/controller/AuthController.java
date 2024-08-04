@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AuthController {
 
     @Autowired
