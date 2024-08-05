@@ -24,9 +24,12 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void registerUser(Users user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+    public Users registerUser(Users users) {
+        if (users.getRole() == null || users.getRole().isEmpty()) {
+            users.setRole("registered");
+        }
+        users.setPassword(passwordEncoder.encode(users.getPassword()));
+        return userRepository.save(users);
     }
 
     @Override
@@ -78,7 +81,7 @@ public class UserService implements UserDetailsService {
             user.setPassword(passwordEncoder.encode(userProfileDTO.getPassword()));
         }
 
-        // El rol no se actualiza aquí porque los usuarios no deben cambiar su propio rol
+
         return userRepository.save(user);
     }
 

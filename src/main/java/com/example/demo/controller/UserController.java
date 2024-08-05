@@ -7,10 +7,13 @@ import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -19,6 +22,16 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @PostMapping("/register")
+    public ResponseEntity<Map<String, String>> registerUser(@RequestBody Users user) {
+        Users registeredUser = userService.registerUser(user);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "User registered successfully");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
     @GetMapping
     public ResponseEntity<List<Users>> getAllUsers() {
         List<Users> users = userService.getAllUsers();
@@ -36,7 +49,7 @@ public class UserController {
         Users user = new Users();
         user.setUsername(userDto.getUsername());
         user.setPassword(userDto.getPassword());
-        user.setRole(userDto.getRole());
+        user.setRole(userDto.getRole() != null && !userDto.getRole().isEmpty() ? userDto.getRole() : "registered");
         Users createdUser = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }

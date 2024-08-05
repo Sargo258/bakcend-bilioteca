@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -31,9 +34,11 @@ public class AuthController {
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody Users user) {
+    public ResponseEntity<?> registerUser(@RequestBody Users user) {
         userService.registerUser(user);
-        return ResponseEntity.ok("User registered successfully");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "User registered successfully");
+        return ResponseEntity.ok().body(response);
     }
 
     @PostMapping("/login")

@@ -12,7 +12,8 @@ public class Users {
     @Column(unique = true)
     private String username;
     private String password;
-    private String role; // "USER" or "ADMIN"
+    @Column(nullable = false)
+    private String role = "registered";
 
     public Long getId() {
         return id;
