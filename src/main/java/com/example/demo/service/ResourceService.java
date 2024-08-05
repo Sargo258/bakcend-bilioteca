@@ -48,4 +48,9 @@ public class ResourceService {
     public List<Resource> getAllResources() {
         return resourceRepository.findAll();
     }
+
+    public Resource getResourceById(Long id) {
+        return resourceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Resource not found"));
+    }
 }

@@ -48,4 +48,15 @@ public class ResourceController {
         List<Resource> resources = resourceService.getAllResources();
         return ResponseEntity.ok(resources);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Resource> getResourceById(@PathVariable Long id) {
+        Resource resource = resourceService.getResourceById(id);
+        if (resource != null) {
+            return ResponseEntity.ok(resource);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
